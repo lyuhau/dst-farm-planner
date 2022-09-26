@@ -40,8 +40,74 @@ plant-picker {
 
 dst-farm-planner > div button {
     margin: 2px;
+    height: 2em;
 }
 
 dst-farm-planner > div label {
     margin: 2px;
+}
+
+dst-farm-planner .save-load {
+    display: inline-flex;
+    margin: 2px;
+    height: 1.5em;
+    border-radius: 5px;
+    border: 1.5px solid #b4b4b4;
+    overflow: hidden;
+}
+
+dst-farm-planner .save-load input {
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    height: 100%;
+    background-color: rgb(248, 248, 248);
+}
+
+dst-farm-planner .save-load button {
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    width: 20px;
+    background-color: rgb(230, 230, 230);
+    background-image: url("../img/copy.png");
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: 50% 45%;
+}
+
+dst-farm-planner .save-load button:active {
+    background-color: rgb(210, 210, 210);
+}
+
+dst-farm-planner > div .copy-status::after {
+    visibility: hidden;
+    margin-left: 4px;
+    padding: 3px;
+    border-radius: 5px;
+    font-size: .8em;
+    animation: fadeAway 3s;
+}
+
+dst-farm-planner > div .copy-status.success::after {
+    mix-blend-mode: multiply;
+    color: white;
+    content: "Copied!";
+    background-color: green;
+}
+
+dst-farm-planner > div .copy-status.failure::after {
+    content: "Error copying to clipboard...";
+    color: red;
+}
+
+@keyframes fadeAway {
+    66% {
+        visibility: inherit;
+        opacity: 1;
+    }
+    100% {
+        visibility: hidden;
+        opacity: 0;
+    }
 }

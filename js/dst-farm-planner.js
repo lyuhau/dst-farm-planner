@@ -29,8 +29,13 @@ class DstFarmPlanner extends HTMLElement {
         this.saveButton.innerText = "Save";
         this.loadButton = this.saveDiv.appendChild(document.createElement("button"));
         this.loadButton.innerText = "Load";
-        this.saveInput = this.saveDiv.appendChild(document.createElement("input"));
-        this.saveInput.placeholder = "Paste save data...";
+        this.saveLoadDiv = this.saveDiv.appendChild(document.createElement("div"));
+        this.saveLoadDiv.classList.add("save-load");
+        this.saveLoadInput = this.saveLoadDiv.appendChild(document.createElement("input"));
+        this.saveLoadInput.placeholder = "Paste save data...";
+        this.copyButton = this.saveLoadDiv.appendChild(document.createElement("button"));
+        this.copyStatus = this.saveDiv.appendChild(document.createElement("span"));
+        this.copyStatus.classList.add("copy-status");
 
         this.column1 = document.createElement("div");
         this.column1.append(this.farm);
@@ -47,10 +52,11 @@ class DstFarmPlanner extends HTMLElement {
 
         this.saveButton.addEventListener("click", this.save.bind(this));
         this.loadButton.addEventListener("click", this.load.bind(this));
+        this.copyButton.addEventListener("click", this.copySaveToClipboard.bind(this));
     }
 
     disconnectedCallback() {
-        removeAllEventListeners(this.layoutClear, this.layoutSelect, this.saveButton, this.loadButton);
+        removeAllEventListeners(this.layoutClear, this.layoutSelect, this.saveButton, this.loadButton, this.copyButton);
     }
 
     clear() {
@@ -58,21 +64,30 @@ class DstFarmPlanner extends HTMLElement {
     }
 
     setLayout(e) {
-        console.log(e.target.value);
         this.farm.setLayout(e.target.value);
     }
 
     save() {
         let json = this.farm.save();
         let data = btoa(JSON.stringify(json));
-        this.saveInput.value = data;
+        this.saveLoadInput.value = data;
     }
 
     load() {
-        let data = this.saveInput.value;
+        let data = this.saveLoadInput.value;
         let json = JSON.parse(atob(data));
         this.layoutSelect.value = json.layout;
         this.farm.load(json);
+    }
+
+    copySaveToClipboard() {
+        this.saveLoadInput.setSelectionRange(0, this.saveLoadInput.value.length);
+        this.copyStatus.classList.remove("success");
+        this.copyStatus.classList.remove("failure");
+        navigator.clipboard.writeText(this.saveLoadInput.value).then(
+            () => this.copyStatus.classList.add("success"),
+            () => this.copyStatus.classList.add("failure")
+        );
     }
 }
 
