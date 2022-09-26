@@ -1,0 +1,130 @@
+
+:host {
+    --meter: 100px;
+    --plot-side: calc(var(--meter) * 4);
+    --plant-diameter: calc(var(--meter) * 1.25);
+    --plant-radius: calc(var(--plant-diameter) / 2);
+    --shf: 4.9406564584124654e-322;
+}
+
+* {
+    user-select: none;
+}
+
+farm-world {
+    display: inline-flex;
+    position: relative;
+    background-image: url("../img/ground.png");
+    background-position: center;
+    background-repeat: repeat;
+    padding: var(--plant-radius);
+}
+
+.bg {
+    position: absolute;
+    background-image: url("../img/soil.png");
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+farm-world > table {
+    border-collapse: collapse;
+}
+
+farm-world > table > tbody {
+    box-shadow: 0 0 0 2px black inset;
+}
+
+farm-world > table > tbody > tr > td {
+    border: 0;
+    padding: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, .2) inset;
+}
+
+farm-world > table > tbody > tr > td > div {
+    width: var(--plot-side);
+    height: var(--plot-side);
+    border: 0;
+    padding: 0;
+}
+
+farm-plot {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+farm-plot-info {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    border-radius: 5px;
+    background-color: rgb(231, 212, 171);
+    opacity: .2;
+    transition: all .15s ease-out;
+}
+
+farm-plot:hover farm-plot-info, farm-plot-info.show-hover, farm-plot-info.show-click {
+    visibility: inherit;
+    opacity: .95;
+    transition: all .15s ease-in;
+    z-index: 10000;
+}
+
+farm-plot-info > table {
+    border-collapse: collapse;
+    border: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px black inset;
+}
+
+farm-plot-info > table > tbody > tr > td {
+    padding: 1px 8px;
+}
+
+farm-slot {
+    display: flex;
+    position: absolute;
+    border-radius: var(--plant-radius);
+    box-shadow: 0 0 4px 4px gray inset;
+    transform: translate(-50%, -50%);
+    width: var(--plant-diameter);
+    height: var(--plant-diameter);
+    top: calc(var(--plot-side) / 2 + var(--meter) * var(--y));
+    left: calc(var(--plot-side) / 2 + var(--meter) * var(--x));
+    overflow: visible;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+farm-slot img {
+    /*width: calc(var(--meter) * 1.25);*/
+    position: absolute;
+    transform: scale(45%) translate(0, 50%);
+    pointer-events: none;
+}
+
+farm-slot[plant] {
+    box-shadow: 0 0 4px 4px green inset;
+}
+
+farm-slot[plant].lonely {
+    box-shadow: 0 0 4px 4px orange inset !important;
+}
+
+farm-slot[plant="asparagus"]   img { content: url("../img/giant/asparagus.png") }
+farm-slot[plant="carrot"]      img { content: url("../img/giant/carrot.png") }
+farm-slot[plant="corn"]        img { content: url("../img/giant/corn.png") }
+farm-slot[plant="dragonfruit"] img { content: url("../img/giant/dragonfruit.png") }
+farm-slot[plant="durian"]      img { content: url("../img/giant/durian.png") }
+farm-slot[plant="eggplant"]    img { content: url("../img/giant/eggplant.png") }
+farm-slot[plant="garlic"]      img { content: url("../img/giant/garlic.png") }
+farm-slot[plant="onion"]       img { content: url("../img/giant/onion.png") }
+farm-slot[plant="pepper"]      img { content: url("../img/giant/pepper.png") }
+farm-slot[plant="pomegranate"] img { content: url("../img/giant/pomegranate.png") }
+farm-slot[plant="potato"]      img { content: url("../img/giant/potato.png") }
+farm-slot[plant="pumpkin"]     img { content: url("../img/giant/pumpkin.png") }
+farm-slot[plant="tomato"]      img { content: url("../img/giant/tomato.png") }
+farm-slot[plant="watermelon"]  img { content: url("../img/giant/watermelon.png") }

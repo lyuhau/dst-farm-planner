@@ -1,0 +1,46 @@
+body {
+    background-image: url("https://static.wikia.nocookie.net/dont-starve-game/images/b/b5/Site-background-light/revision/latest?cb=20210713021527");
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.column {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.column h1 {
+    text-align: center;
+}
+
+.body {
+    width: fit-content;
+    height: fit-content;
+    border-radius: 5px;
+    background-color: rgba(242, 240, 224, .97);
+    padding: 30px;
+}
+
+dst-farm-planner {
+    display: flex;
+    width: fit-content;
+}
+
+farm-display {
+    margin-right: 10px;
+}
+
+plant-picker {
+    margin-left: 10px;
+}
+
+dst-farm-planner > div button {
+    margin: 2px;
+}
+
+dst-farm-planner > div label {
+    margin: 2px;
+}

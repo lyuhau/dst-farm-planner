@@ -1,0 +1,51 @@
+
+table {
+    border-collapse: collapse;
+}
+
+tr:nth-child(2) th {
+    font-size: .8em;
+}
+
+th {
+    user-select: none;
+}
+
+th::after {
+    display: inline-block;
+    content: " ";
+    width: 5px;
+}
+
+th[direction="1"]::after {
+    content: "↓"
+}
+
+th[direction="-1"]::after {
+    content: "↑"
+}
+
+td, th {
+    border: 1px solid rgb(180, 180, 180);
+    padding: 0 3px 0 3px;
+}
+
+td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
+    text-align: center;
+    width: 52px;
+}
+
+td:nth-child(7), td:nth-child(8), td:nth-child(9), td:nth-child(10) {
+    text-align: center;
+}
+
+.selected {
+    background-color: yellow;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 32px;
+}
