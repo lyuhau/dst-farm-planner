@@ -4,16 +4,19 @@
     --plot-side: calc(var(--meter) * 4);
     --plant-diameter: calc(var(--meter) * 1.25);
     --plant-radius: calc(var(--plant-diameter) / 2);
+    --plant-family-radius: calc(var(--meter) * 4);
     --shf: 4.9406564584124654e-322;
 }
 
 * {
     user-select: none;
+    transform-style: preserve-3d;
 }
 
 farm-world {
     display: inline-flex;
     position: relative;
+    border-radius: 5px;
     background-image: url("../img/ground.png");
     background-position: center;
     background-repeat: repeat;
@@ -70,7 +73,7 @@ farm-plot:hover farm-plot-info, farm-plot-info.show-hover, farm-plot-info.show-c
     visibility: inherit;
     opacity: .95;
     transition: all .15s ease-in;
-    z-index: 10000;
+    transform: translateZ(10001px);
 }
 
 farm-plot-info > table {
@@ -85,32 +88,55 @@ farm-plot-info > table > tbody > tr > td {
 }
 
 farm-slot {
-    display: flex;
+    --x: 0;
+    --y: 0;
     position: absolute;
-    border-radius: var(--plant-radius);
-    box-shadow: 0 0 4px 4px gray inset;
     transform: translate(-50%, -50%);
-    width: var(--plant-diameter);
-    height: var(--plant-diameter);
     top: calc(var(--plot-side) / 2 + var(--meter) * var(--y));
     left: calc(var(--plot-side) / 2 + var(--meter) * var(--x));
     overflow: visible;
-    align-items: flex-end;
-    justify-content: center;
+}
+
+farm-slot .indicator {
+    --z: 0;
+    position: absolute;
+    transform: translate(-50%, -50%) translateZ(var(--z));
+    width: var(--plant-diameter);
+    height: var(--plant-diameter);
+}
+
+farm-slot .indicator[indicator-type="size"] {
+    border-radius: var(--plant-radius);
+    box-shadow: 0 0 4px 4px gray inset;
+}
+
+farm-slot .indicator[indicator-type="family"] {
+    visibility: hidden;
+    border-radius: var(--plant-family-radius);
+    box-shadow: 0 0 4px 4px gray inset;
+    width: calc(var(--plant-family-radius) * 2);
+    height: calc(var(--plant-family-radius) * 2);
+    pointer-events: none;
+    --z: 10000px;
+}
+
+farm-slot:hover .indicator[indicator-type="family"] {
+    visibility: inherit;
 }
 
 farm-slot img {
+    --z: 0;
     /*width: calc(var(--meter) * 1.25);*/
     position: absolute;
-    transform: scale(45%) translate(0, 50%);
+    transform: translate(-50%, -60%) scale(45%) translateZ(var(--z));
     pointer-events: none;
 }
 
-farm-slot[plant] {
+farm-slot[plant] .indicator[indicator-type="size"] {
     box-shadow: 0 0 4px 4px green inset;
 }
 
-farm-slot[plant].lonely {
+farm-slot[plant].lonely .indicator[indicator-type="size"] {
     box-shadow: 0 0 4px 4px orange inset !important;
 }
 

@@ -379,6 +379,14 @@ class FarmSlot extends HTMLElement {
         this.style.setProperty("--x", this.transform.localPosition.x);
         this.style.setProperty("--y", this.transform.localPosition.y);
 
+        this.sizeIndicator = this.appendChild(document.createElement("div"));
+        this.sizeIndicator.classList.add("indicator");
+        this.sizeIndicator.setAttribute("indicator-type", "size");
+
+        this.familyIndicator = this.appendChild(document.createElement("div"));
+        this.familyIndicator.classList.add("indicator");
+        this.familyIndicator.setAttribute("indicator-type", "family");
+
         this.img = this.appendChild(document.createElement("img"));
 
         setInterval(this.updateZIndex.bind(this), 1);
@@ -398,7 +406,7 @@ class FarmSlot extends HTMLElement {
 
     updateZIndex() {
         let bound = this.getBoundingClientRect();
-        this.style.setProperty("z-index", Math.round(bound.top + bound.height).toString());
+        this.img.style.setProperty("--z", Math.round(bound.top + bound.height) + "px");
     }
 
     setPlant(plant) {

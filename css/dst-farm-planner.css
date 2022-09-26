@@ -30,6 +30,7 @@ dst-farm-planner {
 }
 
 farm-display {
+    display: flex;
     margin-right: 10px;
 }
 
