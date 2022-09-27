@@ -62,5 +62,83 @@ function cyrb128(str) {
     h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
     h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
     h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
-    return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
+}
+
+
+function split(string, delim, limit = Number.MAX_SAFE_INTEGER) {
+    if (delim instanceof RegExp) {
+        var reFlags = 'g';
+        reFlags += delim.ignoreCase ? 'i' : '';
+        reFlags += delim.multiline ? 'm' : '';
+        delim = RegExp(delim.source, reFlags);
+
+        let parts = [], start = 0, exec = undefined;
+        while (exec = delim.exec(string)) {
+            parts.push(string.slice(start, exec.index));
+            parts.push(exec[0]);
+            start = exec.index + exec[0].length;
+        }
+        parts.push(string.slice(start));
+
+        const result = [];
+        while (result.length < limit - 1 && parts.length >= 2) {
+            const [part, _, ...rest] = parts;
+            result.push(part);
+            parts = rest;
+        }
+        result.push(parts.join(''));
+
+        return result;
+    }
+
+    delim = delim.toString();
+    const parts = string.split(delim);
+    const result = parts.slice(0, limit - 1);
+    if (parts.length > limit - 1) {
+        result.push(parts.slice(limit - 1).join(delim));
+    }
+    return result;
+}
+
+// credit: https://stackoverflow.com/questions/4570333/string-compression-in-javascript
+function compress(string, encoding) {
+    const byteArray = new TextEncoder().encode(string);
+    const cs = new CompressionStream(encoding);
+    const writer = cs.writable.getWriter();
+    writer.write(byteArray);
+    writer.close();
+    return new Response(cs.readable).arrayBuffer();
+}
+
+function decompress(byteArray, encoding) {
+    const cs = new DecompressionStream(encoding);
+    const writer = cs.writable.getWriter();
+    writer.write(byteArray);
+    writer.close();
+    return new Response(cs.readable).arrayBuffer().then(function (arrayBuffer) {
+        return new TextDecoder().decode(arrayBuffer);
+    });
+}
+
+// credit: https://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+function _arrayBufferToBase64( buffer ) {
+    let binary = '';
+    let bytes = new Uint8Array( buffer );
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
+
+// credit: https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer
+function _base64ToArrayBuffer(base64) {
+    let binary_string = window.atob(base64);
+    let len = binary_string.length;
+    let bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
 }

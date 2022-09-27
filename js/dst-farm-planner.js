@@ -27,6 +27,8 @@ class DstFarmPlanner extends HTMLElement {
         this.saveDiv = document.createElement("div");
         this.saveButton = this.saveDiv.appendChild(document.createElement("button"));
         this.saveButton.innerText = "Save";
+        this.saveUrlButton = this.saveDiv.appendChild(document.createElement("button"));
+        this.saveUrlButton.innerText = "Save as link";
         this.loadButton = this.saveDiv.appendChild(document.createElement("button"));
         this.loadButton.innerText = "Load";
         this.saveLoadDiv = this.saveDiv.appendChild(document.createElement("div"));
@@ -51,8 +53,11 @@ class DstFarmPlanner extends HTMLElement {
         this.layoutSelect.addEventListener("change", this.setLayout.bind(this));
 
         this.saveButton.addEventListener("click", this.save.bind(this));
+        this.saveUrlButton.addEventListener("click", this.saveUrl.bind(this));
         this.loadButton.addEventListener("click", this.load.bind(this));
         this.copyButton.addEventListener("click", this.copySaveToClipboard.bind(this));
+
+        this.load(this.getDataFromUrl(window.location.href));
     }
 
     disconnectedCallback() {
@@ -67,17 +72,49 @@ class DstFarmPlanner extends HTMLElement {
         this.farm.setLayout(e.target.value);
     }
 
-    save() {
-        let json = this.farm.save();
-        let data = btoa(JSON.stringify(json));
+    async save() {
+        let save = this.farm.save();
+        let data = await this.encode(save);
         this.saveLoadInput.value = data;
     }
 
-    load() {
-        let data = this.saveLoadInput.value;
-        let json = JSON.parse(atob(data));
-        this.layoutSelect.value = json.layout;
-        this.farm.load(json);
+    async saveUrl() {
+        let save = this.farm.save();
+        let data = await this.encode(save);
+        this.saveLoadInput.value = `${window.location.origin}${window.location.pathname}?data=${data}`;
+    }
+
+    async load(data = this.saveLoadInput.value) {
+        let save = await this.decode(data);
+        this.layoutSelect.value = save.layout;
+        this.farm.load(save);
+    }
+
+    async encode(object) {
+        return btoa(_arrayBufferToBase64(await compress(JSON.stringify(object), "deflate")));
+    }
+
+    async decode(data) {
+        try {
+            return JSON.parse(await decompress(_base64ToArrayBuffer(atob(data)), "deflate"));
+        } catch (e) {}
+        try {
+            return JSON.parse(atob(data));
+        } catch (e) {}
+    }
+
+    getDataFromUrl(input) {
+        try {
+            const url = new URL(input);
+            const params = new URLSearchParams(url.search);
+            return params.get("data");
+        } catch (e) {
+            if (e instanceof TypeError) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
     }
 
     copySaveToClipboard() {
